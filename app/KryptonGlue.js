@@ -20,10 +20,6 @@ class Glue {
 
   loadLibrary(domain, publicKey, formToken = null) {
     let hasErrors = false
-    if (this.loaded) {
-      return Promise.resolve({ KR: window.KR })
-    }
-
     if (!domain) {
       return Promise.reject('Domain not defined')
     }
@@ -47,6 +43,16 @@ class Glue {
     }
 
     if (hasErrors) return Promise.reject('Invalid endpoint or public key')
+
+    if (this.publicKey && this.publicKey !== publicKey && window.KR) {
+      window.KR.setFormConfig({ publicKey })
+        .then()
+        .catch()
+    }
+
+    if (this.loaded) {
+      return Promise.resolve({ KR: window.KR })
+    }
 
     this.domain = domain
     this.publicKey = publicKey
